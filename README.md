@@ -1,7 +1,7 @@
-IntentGarden
+CivicGarden
 ============
 
-Nurture your intentions through webhooks and plant metaphors. 
+Nurture your civicness through webhooks and plant metaphors. 
 
 Setup
 -----

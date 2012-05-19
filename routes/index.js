@@ -5,6 +5,6 @@
 
 exports.index = function(req, res){
   res.render('index', { 
-    title: 'Welcome to IntentGarden' 
+    title: 'Welcome to Civics Garden' 
   });
 };
