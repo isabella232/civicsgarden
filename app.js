@@ -70,7 +70,7 @@ passport.use(new TwitterStrategy({
     callbackURL: process.env.TWITTER_CALLBACK_URL
   },
   function(token, tokenSecret, profile, done) {
-    
+    // Save the user to the database
     User.findOne({providerId: profile.id}, function(err, user) {
       if(!err) {
         if(!user) {
@@ -164,14 +164,16 @@ app.get('/auth/twitter', passport.authenticate('twitter'));
 // authentication process by attempting to obtain an access token.  If
 // access was granted, the user will be logged in.  Otherwise,
 // authentication has failed.
-app.get('/auth/twitter/callback', 
-         passport.authenticate(
-           'twitter', 
-           { 
-             successRedirect: '/',
-             failureRedirect: '/login' 
-           }
-));
+app.get('/auth/twitter/callback', function(req, res, next) {
+  passport.authenticate('twitter', function(err, user, info) {
+     if (err) { return next(err) }
+     if (!user) { return res.redirect('/login') }
+     req.logIn(user, function(err) {
+       if (err) { return next(err); }
+       return res.redirect('/users/' + user.username);
+     });
+  })(req, res, next);        
+});
 
 
 app.get('/logout', function(req, res){
@@ -181,6 +183,8 @@ app.get('/logout', function(req, res){
 
 // Routes
 app.get('/', routes.index);
+
+
 app.post('/plants', function(req, res) {
   if (req.session.passport.user) {
     // load our user
