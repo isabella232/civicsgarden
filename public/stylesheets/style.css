@@ -1,11 +1,12 @@
+
 /* @override http://localhost:3000/stylesheets/style.css */
 
 #loggedin {
   font-weight:  bold;
 }
 
-#loggedin span.caret{
-  margin-left: 6px;
+#loggedin a.dropdown-toggle{
+  height: 18px;
 }
 
 #loggedin img.user-avatar {
