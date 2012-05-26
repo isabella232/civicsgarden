@@ -1,0 +1,7 @@
+div.row-fluid
+  - each plant in plants
+    div.span2.well
+      a(href="/users/" + plant.owner.username)
+        strong= plant.status
+        img(src=plant.owner.avatarUrl)
+        h3= plant.owner.username
