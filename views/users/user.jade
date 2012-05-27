@@ -44,6 +44,6 @@
       -each update in plant.updates
         div.row-fluid
           div.span2
-            strong= update.type
+            img(src="/images/status-#{update.type}.png", height="50px", width="50px")
           div.span8= update.description
           div.span2= update.createdAt
