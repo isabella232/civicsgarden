@@ -1,7 +1,8 @@
 div.row-fluid
   - each plant in plants
-    div.span2.well
+    div.span2.well.plant
       a(href="/users/" + plant.owner.username)
-        strong= plant.status
-        img(src=plant.owner.avatarUrl)
-        h3= plant.owner.username
+        img(src="/images/bamboo-#{plant.status}.png")
+        h3
+          img.avatar(src=plant.owner.avatarUrl)
+          = plant.owner.username
