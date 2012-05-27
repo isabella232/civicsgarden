@@ -1,20 +1,24 @@
 
 /* @override http://localhost:3000/stylesheets/style.css */
 
-#loggedin {
+#login {
   font-weight:  bold;
+  text-align: center;
 }
 
-#loggedin a.dropdown-toggle{
+#login a.dropdown-toggle{
   height: 18px;
 }
 
-#loggedin img.user-avatar {
+#login img.user-avatar {
   vertical-align:text-top;
-  width: 17px;
   margin-right: 6px;
   background: #fff;
-  border-radius: 2px
+  border-radius: 2px;
+}
+
+#login a.btn {
+  display: inline-block !important;
 }
 
 div.plant {
@@ -34,3 +38,18 @@ div.plant img.avatar {
     padding-top: 60px;
   }
 }
+
+/* Right aligned menus need alt position
+ * https://groups.google.com/group/twitter-bootstrap/browse_thread/thread/231afe7853d43d8e */
+/*.navbar .nav.pull-right .dropdown-menu { 
+  left: auto; 
+  right: 0; 
+  &:before { 
+    left: auto; 
+    right: 12px; 
+  } 
+  &:after { 
+    left: auto; 
+    right: 13px; 
+  } 
+} */

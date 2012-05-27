@@ -2,19 +2,19 @@ div.navbar.navbar-fixed-top
   div.navbar-inner
     div.container
       a.brand(href='/') Civics Garden 
-            
-      -if(userSession)
-        div#loggedin.pull-right.btn-group
-          a.btn(href='/users/' + userSession.username)
-            img.user-avatar(src=userSession.avatarUrl)
-            = userSession.username
-          a.btn.dropdown-toggle(data-toggle="dropdown", href="#")
-            span.caret
-          ul.dropdown-menu
-            li
-              a(href='/users/' + userSession.username) My plant
-            li
-              a(href="/logout") Logout
-      -else
-        div#login.pull-right
-          a#login-btn.btn.btn-primary(href='/auth/twitter') Login with Twitter
+      
+      div#login.pull-right      
+        -if(userSession)
+            div.btn-group
+              a.btn(href='/users/' + userSession.username)
+                img.user-avatar(src=userSession.avatarUrl, width="17px", height="17px")
+                = userSession.username
+              a.btn.dropdown-toggle(data-toggle="dropdown", href="#")
+                span.caret
+              ul.dropdown-menu
+                li
+                  a(href='/users/' + userSession.username) My plant
+                li
+                  a(href="/logout") Logout
+        -else
+            a#login-btn.btn.btn-primary(href='/auth/twitter') Login with Twitter
