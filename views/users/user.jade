@@ -9,7 +9,7 @@
   - else 
     div.row-fluid
       div.span3.well
-        p Your plant is #{plant.status}
+        img(src="/images/bamboo-#{plant.status}.lrg.png")
         a.btn.btn-large.btn-primary(href="", data-toggle="modal", href="#planting-form") Water your Plant             
           
     div#planting-form.modal(style="display: none;")
@@ -39,8 +39,13 @@
 
 -if (plant)
   div.row-fluid
-    div.span12
-      strong The status of #{user.username}'s plant is '#{plant.status}'.
+    div.span3.well
+      img(src="/images/bamboo-#{plant.status}.lrg.png")
+      h3
+        img.avatar(src=plant.owner.avatarUrl)
+        = plant.owner.username
+      
+    div.span9
       -each update in plant.updates
         div.row-fluid
           div.span2
