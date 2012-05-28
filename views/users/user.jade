@@ -6,31 +6,7 @@
           button.btn.btn-success(type="submit") Make your Planting!
       div.span9
           strong You haven't yet planted anything!
-  - else 
-    div.row-fluid
-      div.span3.well
-        img(src="/images/bamboo-#{plant.status}.lrg.png")
-        a.btn.btn-large.btn-primary(href="", data-toggle="modal", href="#planting-form") Water your Plant             
-          
-    div#planting-form.modal(style="display: none;")
-      form.modal-form.form-horizontal(action="/plants/#{userSession.username}/update", method="POST")
-
-        div.modal-header
-          button.close(data-dismiss="modal") ×
-          h3 Water your plant
-
-        div.modal-body
-          p Watering your plant records your civic activity
-          fieldset
-            div.control-group
-              label.control-label(for="description") Describe your civic activity
-              div.controls
-                textarea(class="input-xlarge", rows="3", name="update[description]")
-
-        div.modal-footer
-          button.btn(type="submit", data-dismiss="modal") Cancel
-          button.btn.btn-primary(type="submit") Water it!
-  
+                     
 - else 
   - if (!plant)
     div.row-fluid
@@ -44,6 +20,30 @@
       h3
         img.avatar(src=plant.owner.avatarUrl)
         = plant.owner.username
+        
+      - if(userSession && userSession.username == user.username)
+        a.btn.btn-large.btn-primary(href="", data-toggle="modal", href="#planting-form") Water your Plant
+
+        div#planting-form.modal(style="display: none;")
+          form.modal-form.form-horizontal(action="/plants/#{userSession.username}/update", method="POST")
+
+            div.modal-header
+              button.close(data-dismiss="modal") ×
+              h3 Water your plant
+
+            div.modal-body
+              p Watering your plant records your civic activity
+              fieldset
+                div.control-group
+                  label.control-label(for="description") Describe your civic activity
+                  div.controls
+                    textarea(class="input-xlarge", rows="3", name="update[description]")
+
+            div.modal-footer
+              button.btn(type="submit", data-dismiss="modal") Cancel
+              button.btn.btn-primary(type="submit") Water it!             
+        
+      
       
     div.span9
       -each update in updates
