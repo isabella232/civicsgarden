@@ -31,12 +31,31 @@ var PORT = process.env.PORT || 3000;
 // Connect to the DB
 mongoose.connect(process.env.MONGOHQ);
 
-var PlantUpdateSchema = new Schema({
+var UpdateSchema = new Schema({
     source        : String
-  , type          : String // water, withered, dead
+  , type          : String // pot, seed, healthy, withered, dead
   , createdAt     : { type: Date, default: Date.now }
   , description   : String
   , data          : String
+  , owner         : {
+     username  : String
+   , avatarUrl : String
+  }
+});
+
+var UserSchema = new Schema({
+    id            : ObjectId
+  , provider_id   : Number
+  , username      : String
+  , displayName   : String
+  , avatarUrl     : String
+  , createdAt     : { type: Date, default: Date.now }
+  , updatedAt     : { type: Date, default: Date.now }
+  , auth          : {
+      provider      : { type: String, default: 'twitter' }
+    , token         : String
+    , token_secret  : String 
+  }
 });
 
 var PlantSchema = new Schema({
@@ -47,7 +66,6 @@ var PlantSchema = new Schema({
   , updatedAt     : { type: Date, default: Date.now }
   , withersAt     : Date
   , diesAt        : Date
-  , updates       : [ PlantUpdateSchema ]
   , owner         : {
       username    : String
     , avatarUrl   : String
@@ -56,10 +74,17 @@ var PlantSchema = new Schema({
 
 PlantSchema.methods.water = function (description) {
   // append the update
-  this.updates.push({
+  var update = new Update({
      description: description
    , type: 'water'
+   , owner: {
+      username: this.owner.username
+    , avatarUrl: this.owner.avatarUrl
+   }
   })
+  update.save();
+  
+  console.log(update);
   
   //seed, healthy, withered, dead
   switch(this.status) {
@@ -87,7 +112,14 @@ PlantSchema.methods.checkStatus = function (cb) {
       var plant = plants[i];
       
       plant.status.set( 'withered' ); // change the type to wither
-      plant.updates.unshift( { type: 'withered' } ); // add an update to the beginning of the array
+      
+      // Save the update
+      var update = new Update({
+         description: description
+       , type: 'withered'
+      })
+      update.save();
+      
       plant.save(cb); // run the callback for each and every newly withered plant
     }
   });
@@ -102,29 +134,23 @@ PlantSchema.methods.checkStatus = function (cb) {
     
       plant.status    = 'dead';
       plant.updatedAt = new Date;
-      plant.updates.unshift({ type: 'dead' }); // add an update to the beginning of the array
+
+      // Save the update
+      var update = new Update({
+         description: description
+       , type: 'dead'
+      })
+      update.save();
+
       plant.save(cb); // run the callback for each and every newly dead plant
     }
   });
 };
 
-var UserSchema = new Schema({
-    id            : ObjectId
-  , provider_id   : Number
-  , username      : String
-  , displayName   : String
-  , avatarUrl     : String
-  , createdAt     : { type: Date, default: Date.now }
-  , updatedAt     : { type: Date, default: Date.now }
-  , auth          : {
-      provider      : { type: String, default: 'twitter' }
-    , token         : String
-    , token_secret  : String 
-  }
-});
 
 var User = mongoose.model('User', UserSchema);
 var Plant = mongoose.model('Plant', PlantSchema);
+var Update = mongoose.model('Update', UpdateSchema);
 
 passport.use(new TwitterStrategy({
     consumerKey: process.env.TWITTER_CONSUMER_KEY,
@@ -146,15 +172,8 @@ passport.use(new TwitterStrategy({
               , token       : token
               , tokenSecret : tokenSecret
             }
-            , plants      : []
           });
         }
-        user.updatedAt = new Date();
-        user.auth = {
-            provider    : 'twitter'
-          , token       : token
-          , tokenSecret : tokenSecret
-        };
         
         user.save(function(err) {
           if(!err) {

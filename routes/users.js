@@ -20,6 +20,7 @@ exports.getIndex = function(req, res){
  exports.getUser = function(req, res){
    if (req.params.user) {
     var Plant = req.mongoose.models.Plant;
+    var Update = req.mongoose.models.Update;
     var User = req.mongoose.models.User;
 
     Plant.findOne()
@@ -32,13 +33,23 @@ exports.getIndex = function(req, res){
         if (user != null) {
 
           if (plant) {
-            plant = plant.toObject();
-            plant.updates.reverse(); // newest updates first
+            plant.toObject();
           }
-          res.render('users/user', { 
-             title: 'Welcome to Civics Garden'
-           , user: user
-           , plant: plant
+          
+          Update.find()
+              .where('owner.username', req.params.user)
+              .run(function(err, updates){
+          
+            updates = updates.map(function(update) {
+              return update.toObject();
+            });
+      
+            res.render('users/user', { 
+               title: 'Welcome to Civics Garden'
+             , user: user
+             , plant: plant
+             , updates: updates
+            });
           });
         }
         else {

@@ -6,8 +6,8 @@ exports.getIndex = function(req, res){
        .fields('owner', 'status')
        .run(function(err, plants){
          
-    plants = plants.map(function(plant) {
-           return plant.toObject();
+    plants = plants.map(function(plants) {
+           return plants.toObject();
     });
     
     res.render('users/index', { 
@@ -34,8 +34,7 @@ exports.getIndex = function(req, res){
 //
 exports.postCreate =function(req, res) {
   if (req.session.passport.user) {
-    var user = req.session.passport.user;
-    
+    var user = req.session.passport.User;
     var Plant = req.mongoose.models.Plant;
     
     var plant = new Plant({
@@ -67,7 +66,9 @@ exports.postCreate =function(req, res) {
 exports.postUpdate = function(req, res) {
   if (req.session.passport.user) {
     var user = req.session.passport.user;
-    var Plant = req.mongoose.models.Plant;
+    var User = req.mongoose.models.User;  
+    var Plant = req.mongoose.models.Plant; 
+    //var Update = req.mongoose.models.Update;   
     
     Plant.findOne()
          .where('owner.username', user.username)
