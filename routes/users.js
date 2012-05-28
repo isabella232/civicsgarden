@@ -38,6 +38,7 @@ exports.getIndex = function(req, res){
           
           Update.find()
               .where('owner.username', req.params.user)
+              .sort('createdAt', -1)
               .run(function(err, updates){
           
             updates = updates.map(function(update) {
