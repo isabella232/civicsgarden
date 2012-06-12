@@ -54,7 +54,7 @@ exports.postCreate =function(req, res) {
       // Update the session user
 
       req.flash('info', 'Your plant has been saved');
-      res.redirect('/' ); // Redirect back home
+      res.redirect('/users/' + user.username); // Redirect back home
     });
   }
   else {
