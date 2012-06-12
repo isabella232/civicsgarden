@@ -42,13 +42,16 @@
             div.modal-footer
               button.btn(type="submit", data-dismiss="modal") Cancel
               button.btn.btn-primary(type="submit") Water it!             
-        
-      
       
     div.span9
-      -each update in updates
+      - each update in updates
         div.row-fluid
           div.span2
             img(src="/images/status-#{update.type}.png", height="50px", width="50px")
-          div.span8= update.description
+          - if(update.type === 'water')
+              div.span8= update.description
+          - if((update.type === 'withered'))
+              div.span8 The plant has <strong>withered</strong>.
+          - if((update.type === 'dead'))
+              div.span8 The plant has <strong>died</strong>.
           div.span2= update.createdAt
