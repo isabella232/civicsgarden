@@ -8,6 +8,16 @@ html
   body
     include topbar
     div.container
+      - if (flash)
+        div.row-fluid
+          div.span12.well
+            - if(flash.info)
+              = flash.info[0]
+            - if(flash.error)
+              = flash.error[0]
+              //- TODO: show these flash messages as a list
+
+
       != body
             
     div#footer.footer 

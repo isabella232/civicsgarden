@@ -113,6 +113,15 @@ app.configure('production', function(){
 app.dynamicHelpers({
   userSession: function(req, res){
     return req.session.passport.user;
+  },
+  flash: function(req, res) {
+    var flash = req.flash();
+    if (flash.info || flash.error) {
+      return flash;
+    }
+    else {
+      return null;
+    }
   }
 });
 
@@ -132,6 +141,8 @@ app.get('/auth/twitter/callback', function(req, res, next) {
      if (!user) { return res.redirect('/login') }
      req.logIn(user, function(err) {
        if (err) { return next(err); }
+
+       req.flash('info', 'You have been logged in.');
        return res.redirect('/users/' + user.username);
      });
   })(req, res, next);        

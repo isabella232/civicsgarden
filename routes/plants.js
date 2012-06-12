@@ -81,6 +81,7 @@ exports.postUpdate = function(req, res) {
          .where('owner.username', user.username)
          .run(function(err, plant){
       plant.water(req.body.update.description).save(function() {
+        req.flash('info', 'Your plant has been watered');
         res.redirect('/users/' + user.username); // Redirect back home
       })
     });
