@@ -2,7 +2,8 @@
   - if (!plant)
     div.row-fluid
       div.span3.well
-        form.modal-form.form-horizontal(action="/plants", method="POST")
+        img(src="/images/pot.lrg.png")
+        form.form-horizontal(action="/plants", method="POST")
           button.btn.btn-success(type="submit") Make your Planting!
       div.span9
           strong You haven't yet planted anything!
@@ -48,6 +49,8 @@
         div.row-fluid
           div.span2
             img(src="/images/status-#{update.type}.png", height="50px", width="50px")
+          - if(update.type === 'seed')
+              div.span8 The plant has been <strong>seeded</strong>.
           - if(update.type === 'water')
               div.span8= update.description
           - if((update.type === 'withered'))

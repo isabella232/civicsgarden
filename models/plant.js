@@ -5,7 +5,7 @@ var mongoose        = require('mongoose')
 var Update = require('./update');
 
 var PlantSchema = new Schema({
-    type          : String
+    type          : { type: String, default: 'bamboo' }
   , description   : String
   , status        : { type: String, default: 'seed' } // seed, healthy, withered, dead
   , createdAt     : { type: Date, default: Date.now }

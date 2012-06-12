@@ -36,8 +36,7 @@ exports.getIndex = function(req, res){
 //
 exports.postCreate =function(req, res) {
   if (req.session.passport.user) {
-    var user = req.session.passport.User;
-    var Plant = req.mongoose.models.Plant;
+    var user = req.session.passport.user;
     
     var plant = new Plant({
         type          : 'bamboo'
@@ -50,7 +49,16 @@ exports.postCreate =function(req, res) {
     });
 
     plant.save(function (err, plant) {
-      // Update the session user
+      // create an update for the seed
+      var update = new Update({
+         type: 'seed'
+       , createdAt: plant.get('createdAt')
+       , owner: {
+           username: plant.get('owner.username')
+         , avatarUrl: plant.get('owner.avatarUrl')
+        }
+      });
+      update.save();
 
       req.flash('info', 'Your plant has been saved');
       res.redirect('/users/' + user.username); // Redirect back home

@@ -12,6 +12,8 @@ h2 Recent actions
   div.row-fluid
     div.span2
       img(src="/images/status-#{update.type}.png", height="50px", width="50px")
+    - if(update.type === 'seed')
+      div.span8 <strong>#{update.owner.username}</strong>'s civic commitment has been <strong>seeded</strong>.
     - if (update.type === 'water')
       div.span8 <strong>#{update.owner.username}</strong> #{update.description}
     - if (update.type === 'withered')
