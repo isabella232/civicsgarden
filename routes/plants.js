@@ -17,19 +17,8 @@ exports.getIndex = function(req, res){
        title: 'Welcome to Civics Garden' 
      , plants: plants
     });
-    
+   
   });
-  
-  // if (req.session.passport.user) {
-  //    res.render('users/index', { 
-  //       title: 'Create new Plant' 
-  //     , recentUsers: recentUsers
-  //    });
-  // });
-  // else {
-  //   req.flash('error', 'You are not logged in!');
-  //   res.redirect('/'); // Redirect back home
-  // }
 };
 
 //
