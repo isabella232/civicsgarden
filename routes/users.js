@@ -1,28 +1,27 @@
+var User   = require('../models/user')
+  , Plant  = require('../models/plant')
+  , Update = require('../models/update');
+
 /*
  * GET users.
  */
 
 exports.getIndex = function(req, res){
-   var Users = req.mongoose.models.User;
-   Users.find()
-        .limit(10)
-        .fields('username', 'updatedAt')
-        .run(function(err, recentUsers){
+ Users.find()
+      .limit(10)
+      .fields('username', 'updatedAt')
+      .run(function(err, recentUsers){
 
-     res.render('users/index', { 
-        title: 'Welcome to Civics Garden' 
-      , recentUsers: recentUsers
-     });
-
+   res.render('users/index', { 
+      title: 'Welcome to Civics Garden' 
+    , recentUsers: recentUsers
    });
- };
 
- exports.getUser = function(req, res){
-   if (req.params.user) {
-    var Plant = req.mongoose.models.Plant;
-    var Update = req.mongoose.models.Update;
-    var User = req.mongoose.models.User;
+ });
+};
 
+exports.getUser = function(req, res){
+  if (req.params.user) {
     Plant.findOne()
          .where('owner.username', req.params.user)
          .run(function(err, plant){

@@ -1,6 +1,9 @@
-exports.getIndex = function(req, res){
-  var Plant = req.mongoose.models.Plant;
-  
+var User   = require('../models/user')
+  , Plant  = require('../models/plant')
+  , Update = require('../models/update');
+
+
+exports.getIndex = function(req, res){  
   Plant.find()
        .sort('updatedAt', -1)
        .fields('owner', 'status')
@@ -64,12 +67,9 @@ exports.postCreate =function(req, res) {
 // POST: Update an existing Plant
 //
 exports.postUpdate = function(req, res) {
-  if (req.session.passport.user) {
-    var user = req.session.passport.user;
-    var User = req.mongoose.models.User;  
-    var Plant = req.mongoose.models.Plant; 
-    //var Update = req.mongoose.models.Update;   
-    
+  var user = req.session.passport.user;
+
+  if (req.session.passport.user) {    
     Plant.findOne()
          .where('owner.username', user.username)
          .run(function(err, plant){

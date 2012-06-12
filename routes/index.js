@@ -1,10 +1,11 @@
-
+var User   = require('../models/user')
+  , Plant  = require('../models/plant')
+  , Update = require('../models/update');
 /*
  * GET home page.
  */
  
 module.exports = function(req, res){
-  var Users = req.mongoose.models.User;
   Users.find()
        .limit(10)
        .fields('username', 'updatedAt', 'avatarUrl')

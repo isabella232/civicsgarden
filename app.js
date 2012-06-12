@@ -6,8 +6,6 @@ var routes          = {
  , users : require('./routes/users')
  , plants : require('./routes/plants')
 };
-    
-  
                     
 var mongoose        = require('mongoose')
   , Schema          = mongoose.Schema
@@ -31,126 +29,10 @@ var PORT = process.env.PORT || 3000;
 // Connect to the DB
 mongoose.connect(process.env.MONGOHQ);
 
-var UpdateSchema = new Schema({
-    source        : String
-  , type          : String // pot, seed, healthy, withered, dead
-  , createdAt     : { type: Date, default: Date.now }
-  , description   : String
-  , data          : String
-  , owner         : {
-     username  : String
-   , avatarUrl : String
-  }
-});
+var User   = require('./models/user')
+  , Plant  = require('./models/plant')
+  , Update = require('./models/update');
 
-var UserSchema = new Schema({
-    id            : ObjectId
-  , provider_id   : Number
-  , username      : String
-  , displayName   : String
-  , avatarUrl     : String
-  , createdAt     : { type: Date, default: Date.now }
-  , updatedAt     : { type: Date, default: Date.now }
-  , auth          : {
-      provider      : { type: String, default: 'twitter' }
-    , token         : String
-    , token_secret  : String 
-  }
-});
-
-var PlantSchema = new Schema({
-    type          : String
-  , description   : String
-  , status        : { type: String, default: 'seed' } // seed, healthy, withered, dead
-  , createdAt     : { type: Date, default: Date.now }
-  , updatedAt     : { type: Date, default: Date.now }
-  , withersAt     : Date
-  , diesAt        : Date
-  , owner         : {
-      username    : String
-    , avatarUrl   : String
-  }
-});
-
-PlantSchema.methods.water = function (description) {
-  // append the update
-  var update = new Update({
-     description: description
-   , type: 'water'
-   , owner: {
-      username: this.owner.username
-    , avatarUrl: this.owner.avatarUrl
-   }
-  })
-  update.save();
-  
-  console.log(update);
-  
-  //seed, healthy, withered, dead
-  switch(this.status) {
-    case 'seed':
-    case 'healthy':
-    case 'withered':
-    case 'dead':
-      this.status    = 'healthy';
-      this.updatedAt = new Date ;
-      this.withersAt = new Date(this.updatedAt.getTime() + 2 * 24 * 60 * 60 * 100); // 1 days
-      this.diesAt    = new Date(this.updatedAt.getTime() + 4 * 24 * 60 * 60 * 100); // 3 days
-      break;
-  }
-  return this;
-}
-
-PlantSchema.methods.checkStatus = function (cb) {
-  // Find plants to wither
-  this.find()
-      .where('status', 'healthy')
-      .where('withersAt').lte(new Date)
-      .run(function(err, plants) {
-    
-    for (i = 0; i < plants.length; i++) {
-      var plant = plants[i];
-      
-      plant.status.set( 'withered' ); // change the type to wither
-      
-      // Save the update
-      var update = new Update({
-         description: description
-       , type: 'withered'
-      })
-      update.save();
-      
-      plant.save(cb); // run the callback for each and every newly withered plant
-    }
-  });
-  // Find plants to die
-  this.find()
-      .where('status', 'withered')
-      .where('diesAt').lte(new Date)
-      .run(function(err, plants) {
-  
-    for (i = 0; i < plants.length; i++) {
-      var plant = plants[i];
-    
-      plant.status    = 'dead';
-      plant.updatedAt = new Date;
-
-      // Save the update
-      var update = new Update({
-         description: description
-       , type: 'dead'
-      })
-      update.save();
-
-      plant.save(cb); // run the callback for each and every newly dead plant
-    }
-  });
-};
-
-
-var User = mongoose.model('User', UserSchema);
-var Plant = mongoose.model('Plant', PlantSchema);
-var Update = mongoose.model('Update', UpdateSchema);
 
 passport.use(new TwitterStrategy({
     consumerKey: process.env.TWITTER_CONSUMER_KEY,
@@ -206,10 +88,9 @@ passport.deserializeUser(function(obj, done) {
 
 
 // Configuration
-
 app.configure(function(){
   app.set('views', __dirname + '/views');
-  app.set('view engine', 'jade');
+  app.set('view engine', 'jade');  
   app.use(express.cookieParser());  
   app.use(express.bodyParser());
   app.use(express.session({ secret: 'keyboard cat' }));
@@ -234,12 +115,6 @@ app.dynamicHelpers({
     return req.session.passport.user;
   }
 });
-
-// Database Middleware to include our DB in routes
-var includeDB = function (req, res, next) {
-  req.mongoose = mongoose;
-  next();
-}
 
 
 // Redirect the user to Twitter for authentication.  When complete, Twitter
@@ -269,10 +144,10 @@ app.get('/logout', function(req, res){
 });
 
 // Routes
-app.get('/'             , includeDB , routes.plants.getIndex);
-app.get('/users/:user'  , includeDB , routes.users.getUser);
-app.post('/plants'      , includeDB , routes.plants.postCreate );
-app.post('/plants/:user/update' , includeDB , routes.plants.postUpdate);
+app.get('/'             , routes.plants.getIndex);
+app.get('/users/:user'  , routes.users.getUser);
+app.post('/plants'      , routes.plants.postCreate );
+app.post('/plants/:user/update' , routes.plants.postUpdate);
 
 
 
