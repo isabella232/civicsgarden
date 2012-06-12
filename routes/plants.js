@@ -9,15 +9,25 @@ exports.getIndex = function(req, res){
        .fields('owner', 'status')
        .run(function(err, plants){
          
-    plants = plants.map(function(plants) {
-           return plants.toObject();
+    plants = plants.map(function(plant) {
+      return plant.toObject();
     });
+
+    Update.find()
+       .sort('createdAt', -1)
+       .limit(20)       
+       .run(function(err, updates){
+
+      updates = updates.map(function(update) {
+        return update.toObject();
+      });
     
-    res.render('users/index', { 
-       title: 'Welcome to Civics Garden' 
-     , plants: plants
+      res.render('users/index', { 
+         title: 'Welcome to Civics Garden' 
+       , plants: plants
+       , updates: updates
+      });
     });
-   
   });
 };
 

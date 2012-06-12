@@ -6,3 +6,16 @@ div.row-fluid
         h3
           img.avatar(src=plant.owner.avatarUrl)
           = plant.owner.username
+
+h2 Recent actions
+- each update in updates
+  div.row-fluid
+    div.span2
+      img(src="/images/status-#{update.type}.png", height="50px", width="50px")
+    - if (update.type === 'water')
+      div.span8 <strong>#{update.owner.username}</strong> #{update.description}
+    - if (update.type === 'withered')
+      div.span8 <strong>#{update.owner.username}</strong>'s civic commitment has <strong>withered</strong>.
+    - if (update.type === 'dead')
+      div.span8 <strong>#{update.owner.username}</strong>'s civic commitment has <strong>died</strong>.
+    div.span2= update.createdAt
