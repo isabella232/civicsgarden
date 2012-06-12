@@ -137,7 +137,6 @@ app.get('/auth/twitter/callback', function(req, res, next) {
   })(req, res, next);        
 });
 
-
 app.get('/logout', function(req, res){
   req.logout();
   res.redirect('/');
@@ -150,6 +149,14 @@ app.post('/plants'      , routes.plants.postCreate );
 app.post('/plants/:user/update' , routes.plants.postUpdate);
 
 
+/** Set up our Scheduler **/
+var Schedule = require('node-schedule');
+// schedule every minute
+var scheduleUpdates = Schedule.scheduleJob({ minute: new Schedule.Range(0, 59) }, function(){
+  Plant.checkStatus(function(err, docs) {
+    console.log('Scheduled: ', docs);
+  });
+});
 
 
 app.listen(PORT, function(){
