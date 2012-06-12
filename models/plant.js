@@ -38,14 +38,14 @@ PlantSchema.methods.water = function (description) {
     case 'dead':
       this.status    = 'healthy';
       this.updatedAt = new Date ;
-      this.withersAt = new Date(this.updatedAt.getTime() + 2 * 24 * 60 * 60 * 100); // 1 days
-      this.diesAt    = new Date(this.updatedAt.getTime() + 4 * 24 * 60 * 60 * 100); // 3 days
+      this.withersAt = new Date(this.updatedAt.getTime() + 2 * 24 * 60 * 60 * 1000); // 2 days
+      this.diesAt    = new Date(this.updatedAt.getTime() + 4 * 24 * 60 * 60 * 1000); // 4 days
       break;
   }
   return this;
 };
 
-PlantSchema.methods.checkStatus = function (cb) {
+PlantSchema.statics.checkStatus = function (cb) {
   // Find plants to wither
   this.find()
       .where('status', 'healthy')
@@ -54,17 +54,24 @@ PlantSchema.methods.checkStatus = function (cb) {
     
     for (i = 0; i < plants.length; i++) {
       var plant = plants[i];
-      
-      plant.status.set( 'withered' ); // change the type to wither
-      
+      plant.set('status', 'withered' ); // change the type to wither
+      plant.set('updatedAt', new Date);
+      plant.save();
+
       // Save the update
       var update = new Update({
-         description: description
-       , type: 'withered'
+         type: 'withered'
+       , createdAt: plant.get('withersAt')
+       , owner: {
+           username: plant.get('owner.username')
+         , avatarUrl: plant.get('owner.avatarUrl')
+        }
+      });
+      update.save(function(err, docs) {
+
+
+        cb(err, docs); // return the update to the callback
       })
-      update.save();
-      
-      plant.save(cb); // run the callback for each and every newly withered plant
     }
   });
   // Find plants to die
@@ -75,18 +82,23 @@ PlantSchema.methods.checkStatus = function (cb) {
   
     for (i = 0; i < plants.length; i++) {
       var plant = plants[i];
-    
-      plant.status    = 'dead';
-      plant.updatedAt = new Date;
+
+      plant.set('status', 'dead');
+      plant.set('updatedAt', new Date);
+      plant.save(); 
 
       // Save the update
       var update = new Update({
-         description: description
-       , type: 'dead'
-      })
-      update.save();
-
-      plant.save(cb); // run the callback for each and every newly dead plant
+         type: 'dead'
+       , createdAt: plant.get('diesAt')
+       , owner: {
+           username: plant.get('owner.username')
+         , avatarUrl: plant.get('owner.avatarUrl')
+        }
+      });
+      update.save(function(err, docs) {
+        cb(err, docs); // return the update to the callback
+      });
     }
   });
 };
