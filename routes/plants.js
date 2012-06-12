@@ -5,7 +5,7 @@ var User   = require('../models/user')
 
 exports.getIndex = function(req, res){  
   Plant.find()
-       .sort('updatedAt', -1)
+       .sort('withersAt', -1)
        .fields('owner', 'status')
        .run(function(err, plants){
          
