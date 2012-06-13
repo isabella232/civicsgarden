@@ -23,29 +23,35 @@
         img.avatar(src=plant.owner.avatarUrl)
         = plant.owner.username
         
-      - if(userSession && userSession.username == user.username)
-        a.btn.btn-large.btn-primary(href="", data-toggle="modal", href="#planting-form") Water your Plant
+      - if (userSession && userSession.username == user.username)
+        - if (plant.status === 'dead')
+          form.form-horizontal(action="/plants/#{userSession.username}", method="POST")
+            input(type="hidden", name="update[type]", value="reseed")
+            button.btn.btn-success(type="submit") Reseed your plant!
 
-        div#planting-form.modal(style="display: none;")
-          form.modal-form.form-horizontal(action="/plants/#{userSession.username}", method="POST")
-            input(type="hidden", name="update[type]", value="water")
+        - else 
+          a.btn.btn-large.btn-primary(href="", data-toggle="modal", href="#planting-form") Water your Plant
+
+          div#planting-form.modal(style="display: none;")
+            form.modal-form.form-horizontal(action="/plants/#{userSession.username}", method="POST")
+              input(type="hidden", name="update[type]", value="water")
 
 
-            div.modal-header
-              button.close(data-dismiss="modal") ×
-              h3 Water your plant
+              div.modal-header
+                button.close(data-dismiss="modal") ×
+                h3 Water your plant
 
-            div.modal-body
-              p Watering your plant records your civic activity
-              fieldset
-                div.control-group
-                  label.control-label(for="description") Describe your civic activity
-                  div.controls
-                    textarea(class="input-xlarge", rows="3", name="update[description]")
+              div.modal-body
+                p Watering your plant records your civic activity
+                fieldset
+                  div.control-group
+                    label.control-label(for="description") Describe your civic activity
+                    div.controls
+                      textarea(class="input-xlarge", rows="3", name="update[description]")
 
-            div.modal-footer
-              button.btn(type="submit", data-dismiss="modal") Cancel
-              button.btn.btn-primary(type="submit") Water it!             
+              div.modal-footer
+                button.btn(type="submit", data-dismiss="modal") Cancel
+                button.btn.btn-primary(type="submit") Water it!             
       
     div.span9
       - each update in updates

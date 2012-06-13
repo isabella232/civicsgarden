@@ -76,7 +76,7 @@ exports.update = function(req, res) {
               req.flash('error', "Whoops! We can't do that to your plant");
               res.redirect('/users/' + user.username); // Redirect back home
             }
-
+            break;
         }
       }
       else {
