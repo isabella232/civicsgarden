@@ -2,6 +2,8 @@ var mongoose        = require('mongoose')
   , Schema          = mongoose.Schema
   , ObjectId        = Schema.ObjectId;
 
+var async           = require('async');
+
 var Update = require('./update');
 
 var PlantSchema = new Schema({
@@ -17,6 +19,23 @@ var PlantSchema = new Schema({
     , avatarUrl   : String
   }
 });
+
+PlantSchema.methods.seed = function () {
+  // append the update
+  var update = new Update({
+     type: 'seed'
+   , createdAt: this.get('createdAt')
+   , owner: {
+      username: this.get('owner.username')
+    , avatarUrl: this.get('owner.avatarUrl')
+   }
+  })
+  update.save();
+
+  this.set('status', 'seed'); // possible redundant because it's set initially in the schema
+    
+  return this;
+};
 
 PlantSchema.methods.water = function (description) {
   // append the update
@@ -36,71 +55,127 @@ PlantSchema.methods.water = function (description) {
     case 'healthy':
     case 'withered':
     case 'dead':
-      this.status    = 'healthy';
-      this.updatedAt = new Date ;
-      this.withersAt = new Date(this.updatedAt.getTime() + 2 * 24 * 60 * 60 * 1000); // 2 days
-      this.diesAt    = new Date(this.updatedAt.getTime() + 4 * 24 * 60 * 60 * 1000); // 4 days
+      this.set('status'     , 'healthy');
+      this.set('updatedAt'  , new Date);
+      this.set('withersAt'  , new Date(this.get('updatedAt').getTime() + 2 * 24 * 60 * 60 * 1000) ); // 2 days
+      this.set('diesAt'     , new Date(this.get('updatedAt').getTime() + 4 * 24 * 60 * 60 * 1000) ); // 4 days
       break;
   }
   return this;
 };
 
+PlantSchema.methods.wither = function () {
+  // append the update
+  var update = new Update({
+     type: 'withered'
+   , createdAt: this.get('withersAt')
+   , owner: {
+      username: this.get('owner.username')
+    , avatarUrl: this.get('owner.avatarUrl')
+    }
+  });
+  update.save();
+
+  this.set('status', 'withered');
+  this.set('updatedAt', new Date);
+
+  // if we're late withering it (i.e. if the server was sleeping)
+  // give the user 1 day before we kill their plant to prevent
+  // them being told it died immediately after being told
+  // that it withered.
+  var oneDayFromNow = (new Date()).getTime() + 1*24*60*60*1000;
+  if ( this.get('diesAt').getTime() < oneDayFromNow ) {
+    this.set('diesAt', new Date(oneDayFromNow)); 
+  }
+
+  return this;
+};
+
+PlantSchema.methods.die = function () {
+  // append the update
+  var update = new Update({
+     type: 'dead'
+   , owner: {
+      username: this.get('owner.username')
+    , avatarUrl: this.get('owner.avatarUrl')
+   }
+  })
+  update.save();
+
+  this.set('status', 'dead');
+  this.set('updatedAt', this.get('diesAt'));
+
+  return this;
+};
+
+PlantSchema.methods.reseed = function () {
+  // append the update
+  var update = new Update({
+     type: 'reseed'
+   , createdAt: new Date()
+   , owner: {
+      username: this.get('owner.username')
+    , avatarUrl: this.get('owner.avatarUrl')
+   }
+  })
+  update.save();
+
+  this.set('status', 'seed');
+  this.set('updatedAt', new Date());
+
+  return this;
+};
+
 PlantSchema.statics.checkStatus = function (cb) {
-  // Find plants to wither
-  this.find()
-      .where('status', 'healthy')
-      .where('withersAt').lte(new Date)
-      .run(function(err, plants) {
+  var self = this;
+  // first check for withering plants,
+  // then check for 
+  async.series({
+      withered: function(seriesCallback){
+        self.find()
+            .where('status', 'healthy')
+            .where('withersAt').lte(new Date)
+            .run(function(err, plants) {
+          
+          async.map(
+            plants, 
+            function(plant, mapCallback) {
+              // wither the plant
+              plant.wither().save(function(err, plant) {
+                mapCallback(null, plant); // return the withered plant to the callback
+              });
+            },
+            function(err, plants) {
+              seriesCallback(null, plants);
+            }
+          );
+        });
+      },
+      dead: function(seriesCallback){
+        self.find()
+            .where('status', 'withered')
+            .where('diesAt').lte(new Date)
+            .run(function(err, plants) {
     
-    for (i = 0; i < plants.length; i++) {
-      var plant = plants[i];
-      plant.set('status', 'withered' ); // change the type to wither
-      plant.set('updatedAt', new Date);
-      plant.save();
-
-      // Save the update
-      var update = new Update({
-         type: 'withered'
-       , createdAt: plant.get('withersAt')
-       , owner: {
-           username: plant.get('owner.username')
-         , avatarUrl: plant.get('owner.avatarUrl')
-        }
-      });
-      update.save(function(err, docs) {
-
-
-        cb(err, docs); // return the update to the callback
-      })
+          async.map(
+            plants, 
+            function(plant, mapCallback) {
+              // wither the plant
+              plant.die().save(function(err, plant) {
+                mapCallback(null, plant); // return the withered plant to the callback
+              });
+            },
+            function(err, plants) {
+              seriesCallback(null, plants);
+            }
+          );
+        });
+      },
+    },
+    function(err, results){
+      cb(err, results);
     }
-  });
-  // Find plants to die
-  this.find()
-      .where('status', 'withered')
-      .where('diesAt').lte(new Date)
-      .run(function(err, plants) {
-  
-    for (i = 0; i < plants.length; i++) {
-      var plant = plants[i];
-
-      plant.set('status', 'dead');
-      plant.set('updatedAt', new Date);
-      plant.save(); 
-
-      // Save the update
-      var update = new Update({
-         type: 'dead'
-       , createdAt: plant.get('diesAt')
-       , owner: {
-           username: plant.get('owner.username')
-         , avatarUrl: plant.get('owner.avatarUrl')
-        }
-      });
-      update.save(function(err, docs) {
-        cb(err, docs); // return the update to the callback
-      });
-    }
-  });
+  );
 };
 
 module.exports = mongoose.model('Plant', PlantSchema);

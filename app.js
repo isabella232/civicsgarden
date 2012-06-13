@@ -164,8 +164,8 @@ app.post('/plants/:user/update' , routes.plants.postUpdate);
 var Schedule = require('node-schedule');
 // schedule every minute
 var scheduleUpdates = Schedule.scheduleJob({ minute: new Schedule.Range(0, 59) }, function(){
-  Plant.checkStatus(function(err, docs) {
-    console.log('Scheduled: ', docs);
+  Plant.checkStatus(function(err, plants) {
+    // console.log('Scheduled: ', plants);
   });
 });
 

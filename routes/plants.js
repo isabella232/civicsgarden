@@ -48,18 +48,7 @@ exports.postCreate =function(req, res) {
       }
     });
 
-    plant.save(function (err, plant) {
-      // create an update for the seed
-      var update = new Update({
-         type: 'seed'
-       , createdAt: plant.get('createdAt')
-       , owner: {
-           username: plant.get('owner.username')
-         , avatarUrl: plant.get('owner.avatarUrl')
-        }
-      });
-      update.save();
-
+    plant.seed().save(function (err, plant) {
       req.flash('info', 'Your plant has been saved');
       res.redirect('/users/' + user.username); // Redirect back home
     });
