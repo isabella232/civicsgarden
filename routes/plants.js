@@ -34,23 +34,74 @@ exports.getIndex = function(req, res){
 //
 // POST: Create a new Plant
 //
-exports.postCreate =function(req, res) {
+exports.update = function(req, res) {
   if (req.session.passport.user) {
     var user = req.session.passport.user;
-    
-    var plant = new Plant({
-        type          : 'bamboo'
-      // , description   : req.body.plant.description || ''
-      , status        : 'seed'
-      , owner         : {
-          username    : user.username
-        , avatarUrl   : user.avatarUrl
-      }
-    });
 
-    plant.seed().save(function (err, plant) {
-      req.flash('info', 'Your plant has been saved');
-      res.redirect('/users/' + user.username); // Redirect back home
+    Plant.findOne()
+         .where('owner.username', user.username)
+         .run(function(err, plant){
+      if (plant) {
+        switch(plant.get('status')) {
+          case 'seed':
+          case 'healthy':
+          case 'withered':
+            if (req.body.update.type === 'water') {
+              plant.water(req.body.update.description).save(function() {
+                req.flash('info', 'Your plant has been watered');
+                res.redirect('/users/' + user.username); // Redirect back home
+              });
+            }
+            else {
+              // seed/healthy/withered plants can only be watered
+              req.flash('error', "Whoops! We can't do that to your plant");
+              res.redirect('/users/' + user.username); // Redirect back home
+            }
+            break;
+          case 'dead':
+            if (req.body.update.type === 'water') {
+              plant.reseed().water(req.body.update.description).save(function() {
+                req.flash('info', 'Your plant has been reseeded and watered.');
+                res.redirect('/users/' + user.username); // Redirect back home
+              });
+            }
+            else if (req.body.update.type === 'reseed') {
+              plant.reseed().save(function() {
+                req.flash('info', 'Your plant has been reseeded.');
+                res.redirect('/users/' + user.username); // Redirect back home
+              });
+            }
+            else {
+              // dead plants can only be watered or reseaded
+              req.flash('error', "Whoops! We can't do that to your plant");
+              res.redirect('/users/' + user.username); // Redirect back home
+            }
+
+        }
+      }
+      else {
+        // if no plant  
+        var plant = new Plant({
+            type          : 'bamboo'
+          // , description   : req.body.plant.description || ''
+          , status        : 'seed'
+          , owner         : {
+              username    : user.username
+            , avatarUrl   : user.avatarUrl
+          }
+        });
+
+        plant.seed();
+
+        if (req.body.update.type === 'water') {
+          plant.water(req.body.update.description);
+        }
+
+        plant.save(function (err, plant) {
+          req.flash('info', 'Your plant has been seeded.');
+          res.redirect('/users/' + user.username); // Redirect back home
+        });     
+      }
     });
   }
   else {

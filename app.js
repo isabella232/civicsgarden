@@ -156,8 +156,7 @@ app.get('/logout', function(req, res){
 // Routes
 app.get('/'             , routes.plants.getIndex);
 app.get('/users/:user'  , routes.users.getUser);
-app.post('/plants'      , routes.plants.postCreate );
-app.post('/plants/:user/update' , routes.plants.postUpdate);
+app.post('/plants/:user' , routes.plants.update);
 
 
 /** Set up our Scheduler **/

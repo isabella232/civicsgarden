@@ -3,7 +3,8 @@
     div.row-fluid
       div.span3.well
         img(src="/images/pot.lrg.png")
-        form.form-horizontal(action="/plants", method="POST")
+        form.form-horizontal(action="/plants/#{userSession.username}", method="POST")
+          input(type="hidden", name="update[type]", value="seed")
           button.btn.btn-success(type="submit") Make your Planting!
       div.span9
           strong You haven't yet planted anything!
@@ -26,7 +27,9 @@
         a.btn.btn-large.btn-primary(href="", data-toggle="modal", href="#planting-form") Water your Plant
 
         div#planting-form.modal(style="display: none;")
-          form.modal-form.form-horizontal(action="/plants/#{userSession.username}/update", method="POST")
+          form.modal-form.form-horizontal(action="/plants/#{userSession.username}", method="POST")
+            input(type="hidden", name="update[type]", value="water")
+
 
             div.modal-header
               button.close(data-dismiss="modal") ×
@@ -57,4 +60,6 @@
               div.span8 The plant has <strong>withered</strong>.
           - if((update.type === 'dead'))
               div.span8 The plant has <strong>died</strong>.
+          - if((update.type === 'reseed'))
+              div.span8 The plant has been <strong>reseeded</strong>.
           div.span2= update.createdAt

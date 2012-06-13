@@ -20,4 +20,6 @@ h2 Recent actions
       div.span8 <strong>#{update.owner.username}</strong>'s civic commitment has <strong>withered</strong>.
     - if (update.type === 'dead')
       div.span8 <strong>#{update.owner.username}</strong>'s civic commitment has <strong>died</strong>.
+    - if((update.type === 'reseed'))
+      div.span8 #{update.owner.username}</strong>'s civic committment has been <strong>reseeded</strong>.
     div.span2= update.createdAt
