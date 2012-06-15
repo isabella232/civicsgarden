@@ -17,7 +17,7 @@
    height="130"
    xml:space="preserve"
    sodipodi:docname="plants.svg"
-   inkscape:export-filename="/Users/SlicedBread/Sites/civicsgarden/public/images/bamboo-dead.lrg.png"
+   inkscape:export-filename="/Users/SlicedBread/Sites/civicsgarden/public/images/pot.lrg.png"
    inkscape:export-xdpi="180"
    inkscape:export-ydpi="180"><metadata
      id="metadata8"><rdf:RDF><cc:Work
@@ -2475,11 +2475,11 @@
      inkscape:guide-bbox="true"
      inkscape:zoom="2.9641916"
      inkscape:cx="62.231182"
-     inkscape:cy="42.136065"
+     inkscape:cy="82.619278"
      inkscape:window-x="142"
      inkscape:window-y="22"
      inkscape:window-maximized="0"
-     inkscape:current-layer="g8694" /><g
+     inkscape:current-layer="g7443" /><g
      inkscape:groupmode="layer"
      id="layer2"
      inkscape:label="Pot"
@@ -5822,7 +5822,7 @@
        id="path13017"
        inkscape:connector-curvature="0"
        sodipodi:nodetypes="ccsc" /></g><g
-     style="display:inline"
+     style="display:none"
      transform="matrix(1.25,0,0,-1.25,0,130)"
      inkscape:label="Dead"
      inkscape:groupmode="layer"
