@@ -1,7 +1,7 @@
 - if(userSession && userSession.username == user.username)
   - if (!plant)
     div.row-fluid
-      div.span3.well
+      div#plant-info.span3.well
         img(src="/images/pot.lrg.png")
         form.form-horizontal(action="/plants/#{userSession.username}", method="POST")
           input(type="hidden", name="update[type]", value="seed")
@@ -17,7 +17,7 @@
 
 -if (plant)
   div.row-fluid
-    div.span3.well
+    div#plant-info.span3.well
       img(src="/images/bamboo-#{plant.status}.lrg.png")
       h3
         img.avatar(src=plant.owner.avatarUrl)

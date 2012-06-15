@@ -36,6 +36,14 @@ div.plant {
   margin-left: 0;
 }
 
+#plant-info {
+  text-align: center;
+}
+
+#plant-info form {
+  margin-top: 10px;
+}
+
 div.plant img.avatar {
   vertical-align:text-bottom;
   width: 20px;
