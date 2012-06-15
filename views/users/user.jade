@@ -58,6 +58,17 @@
                   |  Water it!             
       
     div.span9
+      - if (flash)
+        div.row-fluid
+          - if(flash.info)
+            p.alert.alert-success= flash.info[0]
+              a.close(data-dismiss="alert", href="#") &times;
+          - if(flash.error)
+            p.alert.alert-error= flash.error[0]
+              a.close(data-dismiss="alert", href="#") &times;
+            //- TODO: show these flash messages as a list
+
+
       - each update in updates
         div.row-fluid
           div.span2
