@@ -13,5 +13,6 @@
     , "passport-twitter": ">=0.1.3"
     , "node-schedule": ">=0.1.5"
     , "async": ">=0.1.22"
+    , "ntwitter": ">=0.3.0"
   }
 }

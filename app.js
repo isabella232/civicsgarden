@@ -34,6 +34,14 @@ var User   = require('./models/user')
   , Update = require('./models/update');
 
 
+var nTwitter = require('ntwitter')
+var twitter = new nTwitter({
+  consumer_key: process.env.SUPER_TWITTER_CONSUMER_KEY,
+  consumer_secret: process.env.SUPER_TWITTER_CONSUMER_SECRET,
+  access_token_key: process.env.SUPER_TWITTER_ACCESS_TOKEN,
+  access_token_secret: process.env.SUPER_TWITTER_ACCESS_TOKEN_SECRET
+});
+
 passport.use(new TwitterStrategy({
     consumerKey: process.env.TWITTER_CONSUMER_KEY,
     consumerSecret: process.env.TWITTER_CONSUMER_SECRET,
@@ -164,7 +172,31 @@ var Schedule = require('node-schedule');
 // schedule every minute
 var scheduleUpdates = Schedule.scheduleJob({ minute: new Schedule.Range(0, 59) }, function(){
   Plant.checkStatus(function(err, plants) {
-    // console.log('Scheduled: ', plants);
+    
+    // tweet the WITHERED plants
+    plants.withered.forEach(function(plant) {
+      twitter
+        .updateStatus(
+          '@' + plant.owner.username + ' Whoops. Your civic commitment is withering. Refresh it with a civic deed: http://civicsgarden.herokuapp.com/users/' + plant.owner.username,
+          function (err, data) {
+            if (!err) { console.log('Tweeted @', plant.owner.username,' that their plant is withering.') }
+            else { console.log('Tweeted ERROR: ', err) } 
+          }
+        );
+    });
+
+    // tweet the DEAD plants
+    plants.dead.forEach(function(plant) {
+      twitter
+        .updateStatus(
+          '@' + plant.owner.username + ' Uh oh. Your civic commitment has died. Replant and sustain it through civic actions: http://civicsgarden.herokuapp.com/users/' + plant.owner.username,
+          function (err, data) {
+            if (!err) { console.log('Tweeted', plant.owner.username,'that their plant has died.') }
+            else { console.log('Tweeted ERROR: ', err) } 
+          }
+        );
+     });
+  
   });
 });
 
