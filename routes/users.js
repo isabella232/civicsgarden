@@ -45,7 +45,7 @@ exports.getUser = function(req, res){
             });
       
             res.render('users/user', { 
-               title: 'Civics Garden: ' + owner.username
+               title: 'Civics Garden: ' + req.params.user
              , user: user
              , plant: plant
              , updates: updates
