@@ -30,7 +30,9 @@
             button.btn.btn-success(type="submit") Reseed your plant!
 
         - else 
-          a.btn.btn-large.btn-primary(href="", data-toggle="modal", href="#planting-form") Water your Plant
+          a.btn.btn-large.btn-primary(href="", data-toggle="modal", href="#planting-form") 
+            i.icon-tint.icon-white
+            |  Water your Plant
 
           div#planting-form.modal(style="display: none;")
             form.modal-form.form-horizontal(action="/plants/#{userSession.username}", method="POST")
@@ -51,7 +53,9 @@
 
               div.modal-footer
                 button.btn(type="submit", data-dismiss="modal") Cancel
-                button.btn.btn-primary(type="submit") Water it!             
+                button.btn.btn-primary(type="submit")
+                  i.icon-tint.icon-white
+                  |  Water it!             
       
     div.span9
       - each update in updates
