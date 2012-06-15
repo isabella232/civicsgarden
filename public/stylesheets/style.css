@@ -14,6 +14,7 @@
 
 #login {
   font-weight:  bold;
+  min-width: 100px;
 }
 
 #login img.user-avatar {
