@@ -44,6 +44,10 @@ div.plant {
   margin-top: 10px;
 }
 
+#planting-form {
+  text-align: left;
+}
+
 div.plant img.avatar {
   vertical-align:text-bottom;
   width: 20px;
