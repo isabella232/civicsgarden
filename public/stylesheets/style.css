@@ -49,6 +49,10 @@ div.plant img.avatar {
   }
 }
 
+#about {
+  margin-top: 18px;
+}
+
 /* Right aligned menus need alt position
  * https://groups.google.com/group/twitter-bootstrap/browse_thread/thread/231afe7853d43d8e */
 /*.navbar .nav.pull-right .dropdown-menu { 
