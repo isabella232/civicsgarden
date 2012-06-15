@@ -1,13 +1,13 @@
 
 /* @override http://localhost:3000/stylesheets/style.css */
 
-#login {
-  font-weight:  bold;
+.hero-unit #hero-login {
   text-align: center;
 }
 
-#login a.dropdown-toggle{
-  height: 18px;
+
+#login {
+  font-weight:  bold;
 }
 
 #login img.user-avatar {

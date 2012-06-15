@@ -1,3 +1,26 @@
+div.hero-unit
+  div.row-fluid
+    img(src="/images/bamboo-healthy.lrg.png").span3
+    div.span9
+      h1 Cultivate your civic commitment.
+      p 
+        | Reflect, record&mdash;and be reminded of&mdash;your civic deeds and contributions.
+        | Nurture a plant in our Civics Garden and water it regularly with your civic actions.
+      - if(!userSession)
+        p To get started, 
+          a#hero-login.btn.btn-large.btn-success(href='/auth/twitter')
+            i.icon-leaf.icon-white"
+            |  Login with Twitter
+          |  to begin growing a better civic life.
+      - else 
+          p Visit 
+            a#hero-login.btn.btn-large.btn-success(href='/users/' + userSession.username)
+              i.icon-leaf.icon-white"
+              |  Your Plant
+            |  to continue growing a better civic life.
+
+
+
 div.row-fluid
   - each plant in plants
     div.span3.well.plant
