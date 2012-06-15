@@ -1,8 +1,14 @@
 
 /* @override http://localhost:3000/stylesheets/style.css */
 
+.hero-unit h1 {
+  margin-top: 60px;
+  margin-bottom: 18px;
+}
+
 .hero-unit #hero-login {
   text-align: center;
+  margin-top: -5px;
 }
 
 
@@ -23,6 +29,10 @@
 
 div.plant {
 	text-align:center;
+}
+
+.plant-list div.plant:nth-child(4n+1) {
+  margin-left: 0;
 }
 
 div.plant img.avatar {
