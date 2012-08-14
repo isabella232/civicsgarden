@@ -1,23 +1,39 @@
 var User   = require('../models/user')
   , Plant  = require('../models/plant')
-  , Update = require('../models/update');
+  , Activity = require('../models/activity');
+
+var Users = require('../config/users.json');
 
 /*
  * GET users.
  */
 
-exports.getIndex = function(req, res){
- Users.find()
-      .limit(10)
-      .fields('username', 'updatedAt')
-      .run(function(err, recentUsers){
-
-   res.render('users/index', { 
-      title: 'Welcome to Civics Garden' 
-    , recentUsers: recentUsers
-   });
-
- });
+exports.all = function(req, res){
+  User.find()
+      .where('username').in(Users)
+      .lean() // only return JSON
+      .exec(function(err, dbUsers){
+    
+    // populate an object of our users
+    var users = {};
+    Users.forEach(function(user) {
+      users[user] = {};
+    });
+    
+    // fill that object with any users already in the database
+    dbUsers.forEach(function(dbUser) {
+      users[dbUser.username] = dbUser;
+    });
+    
+    // convert the object back into an array, setting the 'username' key
+    var usersArray = [];
+    for(var username in users) {
+      users[username].username = username;
+      usersArray.push(users[username]);
+    }
+    
+    res.json(usersArray);
+  });
 };
 
 exports.getUser = function(req, res){

@@ -1,7 +1,10 @@
 var User   = require('../models/user')
   , Plant  = require('../models/plant')
-  , Update = require('../models/update');
+  , Activity = require('../models/activity');
 
+exports.all = function(req, res) {
+  
+}
 
 exports.getIndex = function(req, res){  
   Plant.find()

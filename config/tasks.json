@@ -1,0 +1,18 @@
+[
+  {
+    "type": "dishes",
+    "actions": [
+      "Collected dirty dishes",
+      "Loaded and ran dishwasher",
+      "Emptied dishwasher"
+    ]
+  },
+  {
+    "type": "surfaces",
+    "actions": [
+      "Tidied loose objects & appliances",
+      "Wiped down & sanitized surfaces",
+      "Fly patrol"
+    ]
+  }
+]

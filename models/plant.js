@@ -4,7 +4,7 @@ var mongoose        = require('mongoose')
 
 var async           = require('async');
 
-var Update = require('./update');
+var Activity = require('./activity');
 
 var PlantSchema = new Schema({
     type          : { type: String, default: 'bamboo' }

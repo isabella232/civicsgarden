@@ -2,16 +2,14 @@ var mongoose        = require('mongoose')
   , Schema          = mongoose.Schema
   , ObjectId        = Schema.ObjectId;
 
-var UpdateSchema = new Schema({
-    source        : String
-  , type          : String // pot, seed, healthy, withered, dead
+var ActivitySchema = new Schema({
+    task          : String // pot, seed, healthy, withered, dead
+  , action        : String
   , createdAt     : { type: Date, default: Date.now }
-  , description   : String
-  , data          : String
   , owner         : {
      username  : String
    , avatarUrl : String
   }
 });
 
-module.exports = mongoose.model('Update', UpdateSchema);
+module.exports = mongoose.model('Activity', ActivitySchema);
