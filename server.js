@@ -1,4 +1,5 @@
-var express         = require('express')
+var fs              = require('fs') 
+  , express         = require('express')
   , app             = module.exports = express();
                     
 var mongoose        = require('mongoose')
@@ -41,8 +42,8 @@ app.configure(function(){
   app.use(express.bodyParser());
   app.use(express.session({ secret: 'keyboard cat' }));
   app.use(express.methodOverride());
+  app.use(express.static(__dirname + '/public')); // put this before the router
   app.use(app.router);
-  app.use(express.static(__dirname + '/public'));
 });
 
 app.configure('development', function(){
@@ -67,11 +68,18 @@ app.configure('production', function(){
 // });
 
 
-// Routes
-// app.get('/'             , routes.plants.getIndex);
 app.get('/api/users/:user?'  , require('./routes/users').all);
 app.get('/api/tasks'         , require('./routes/tasks').all);
 app.post('/api/activities'   , require('./routes/activities').create);
+
+// Routes
+app.get('*', function(req, res) {
+  fs.readFile(__dirname + '/public/index.html', 'utf8', function(err, text){
+    res.send(text);
+  });
+});
+
+console.log(app.routes);
 
 
 

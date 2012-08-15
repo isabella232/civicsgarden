@@ -1,0 +1,31 @@
+<% var endpoint = model.attributes; %>
+  
+  <td><%= endpoint.name %></td>
+  
+  <td>
+    <% if (endpoint.ping.services.status_code === 200) { %>
+      <% if (endpoint.ping.services.response_time < 1000) { %>
+        <div class="btn btn-success services-info" rel="tooltip">Good</div>
+      <% } else { %>
+        <div class="btn btn-warning services-info" rel="tooltip">Slow</div>
+      <% } %>
+    <% } else { %>
+      <div class="btn btn-danger services-info" rel="tooltip"><%= endpoint.ping.services.status_code %></div>
+    <% } %>
+  </td>
+  
+  <td>
+    <% if (endpoint.ping.requests.status_code === 200) { %>
+      <% if (endpoint.ping.requests.response_time < 1000) { %>
+        <div class="btn btn-success requests-info" rel="tooltip">Good</div>
+      <% } else { %>
+        <div class="btn btn-warning requests-info" rel="tooltip">Slow</div>
+      <% } %>
+    <% } else { %>
+      <div class="btn btn-danger requests-info" rel="tooltip"><%= endpoint.ping.requests.status_code %></div>
+    <% } %>
+  </td>
+  
+  <td><%= endpoint.ping.services.services_count %></td>
+  
+  <td><%= endpoint.ping.requests.requests_count %></td>

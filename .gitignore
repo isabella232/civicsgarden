@@ -2,7 +2,6 @@
 .DS_Store
 profile
 
+# node noise
 node_modules
 .env
-
-
