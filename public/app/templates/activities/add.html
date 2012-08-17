@@ -30,7 +30,6 @@
                   }
                   else {
                     percent = 100 * (1 - (((new Date()).getTime() - (new Date(action.last_activity.createdAt)).getTime()) / expires));
-                    console.log(percent);
                   }
                 %>
                 <div class="progress progress-striped">
@@ -38,6 +37,11 @@
                 </div>
               </div>
               <a class="btn btn-primary span2" data-type="<%= task.type %>" data-action="<%= action.action %>"><i class="icon-tint icon-white"></i></a>
+            </div>
+            <div class="row-fluid who">
+              <% if (action.last_activity) { %>
+                <em><%= action.last_activity.username %> did it last</em>
+              <% } %>
             </div>
           </div> <!-- /.select-action -->
         </div>

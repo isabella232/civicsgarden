@@ -77,6 +77,11 @@ body {
   margin-top: 20px !important;
 } 
 
+.select-action .who {
+  margin-top: -15px;
+  text-align: left;
+}
+
 .progress {
   margin-top: 1px;
   height: 25px;
