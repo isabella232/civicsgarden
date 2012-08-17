@@ -16,66 +16,34 @@ function(app, Backbone) {
       return "/api/users";
     },
 
-    cache: false,
-
-    parse: function(obj) {
-      return obj;
-    },
-
     initialize: function(models, options) {
       this.fetch();
     }
   });
   
-  User.Views.SelectList = Backbone.View.extend({
-    template: "endpoint/item",
-    
-    serialize: function() {
-        console.log(this.model);
-        return { model: this.model };
-    },
-    
-
-  });
-
-  // Endpoint.Views.Item = Backbone.View.extend({
-  //   template: "endpoint/item",
-  // 
-  //   tagName: "tr",
-  // 
+  // User.Views.SelectUserItem = Backbone.View.extend({
+  //   template: "users/select-item",
+  //       
+  //   tagName: "div",
+  //   
   //   serialize: function() {
-  //     console.log(this.model);
-  //     return { model: this.model };
+  //     return { model: this.model.attributes };
   //   },
   // 
-  //   afterRender: function() {
-  //     this.servicesTooltip();
-  //     this.responsesTooltip();
-  //   },
-  //   
-  //   servicesTooltip: function() {
-  //     var tooltip = "Server response: " + this.model.get('ping').services.response_time + 'ms';
-  //     this.$(".services-info").tooltip({title: tooltip});    
-  //   },
-  //   
-  //   responsesTooltip: function() {
-  //     var tooltip = "Server response: " + this.model.get('ping').requests.response_time + 'ms';
-  //     this.$(".requests-info").tooltip({title: tooltip});    
-  //   },
   //   
   // });
   // 
-  // Endpoint.Views.List = Backbone.View.extend({   
-  //   template: "endpoint/list",
+  // User.Views.SelectUserList = Backbone.View.extend({   
+  //   template: "users/select-list",
   // 
   //   serialize: function() {
   //     return { collection: this.collection };
   //   },
   // 
   //   beforeRender: function(manage) {
-  //     this.collection.each(function(endpoint) {
-  //       this.insertView("tbody", new Endpoint.Views.Item({
-  //         model: endpoint
+  //     this.collection.each(function(user) {
+  //       this.insertView("#select-user", new User.Views.SelectUserItem({
+  //         model: user
   //       }));
   //     }, this);
   //   },
@@ -84,7 +52,7 @@ function(app, Backbone) {
   //     this.collection.on("reset", this.render, this);
   //   }
   // });
-  // 
+  
   // Endpoint.Views.Meta = Backbone.View.extend({
   //     template: "endpoint/meta",
   //   

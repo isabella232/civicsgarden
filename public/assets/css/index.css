@@ -4,6 +4,30 @@ body {
   padding-top: 60px;
 }
 
+ul#pager {
+  margin: 0;
+  padding: 0;
+  text-align: center;
+}
+
+ul#pager li {
+  display: inline-block;
+  margin: 20px 3px 0;
+  padding: 0;
+  width: 20px;
+  height: 20px;
+  background-color: #888;
+  overflow: hidden;
+  border-radius: 10px;
+  box-shadow: inset 0 2px 5px rgba(0,0,0,.5);
+
+}
+
+ul#pager li.active {
+  background-color: #0074CC;
+}
+
+
 @media (max-width: 979px) {
   body {
     padding-top: 0px;

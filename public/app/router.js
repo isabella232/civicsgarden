@@ -4,37 +4,29 @@ define([
 
   // Modules.
   "modules/user",
+  "modules/activity",
 ],
 
-function(app, User) {
+function(app, User, Activity) {
 
   // Defining the application router, you can attach sub routers here.
   var Router = Backbone.Router.extend({
     routes: {
       "": "index",
-      "activities/new": "newActivity"
+      "activities/new": "newActivityUser",
+      "activities/:user/new": "newActivityTask"
     },
-
+    
     index: function() {
       // Use the main layout.
       app.useLayout("main").render();
-    },
-    
-    newActivity: function() {
-      // Use the main layout.
-      app.useLayout("main");
       
       app.layout.setViews({
-        "#navbar": new Backbone.View({
-          template: 'navbar/navbar'
+        "#body": new Activity.Views.create({
+          activities: this.activities,
+          users: this.users
         }),
-        // "#status": new Endpoint.Views.Meta({
-        //   collection: this.endpoints
-        // }),
-        // "#endpoints": new Endpoint.Views.List({
-        //   collection: this.endpoints
-        // }),
-      });
+      }).render();
       
       app.layout.render();
     },
@@ -43,18 +35,13 @@ function(app, User) {
       app.useLayout("main");
       
       // Load our initial data
-      this.users = new User.Collection();
+      this.users      = new User.Collection();
+      this.activities = new Activity.Collection();
             
       app.layout.setViews({
         "#navbar": new Backbone.View({
           template: 'navbar/navbar'
         }),
-        // "#status": new Endpoint.Views.Meta({
-        //   collection: this.endpoints
-        // }),
-        // "#endpoints": new Endpoint.Views.List({
-        //   collection: this.endpoints
-        // }),
       });
     }
 

@@ -70,6 +70,7 @@ app.configure('production', function(){
 
 app.get('/api/users/:user?'  , require('./routes/users').all);
 app.get('/api/tasks'         , require('./routes/tasks').all);
+app.get('/api/activities'   , require('./routes/activities').all);
 app.post('/api/activities'   , require('./routes/activities').create);
 
 // Routes
@@ -78,8 +79,6 @@ app.get('*', function(req, res) {
     res.send(text);
   });
 });
-
-console.log(app.routes);
 
 
 

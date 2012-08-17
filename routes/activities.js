@@ -3,15 +3,27 @@ var User   = require('../models/user')
   , Activity = require('../models/activity');
 
 //
-// POST: Update an existing Plant
+// POST: Save an activity
 //
 exports.create = function(req, res) {
   var activity = new Activity({
-      task       : req.body.activity.task
-    , action     : req.body.activity.action
-    , username  : req.body.activity.username
+      task       : req.body.task
+    , action     : req.body.action
+    , username  : req.body.username
   });
-  activity.save(function(activity) {
+  activity.save(function(err, activity) {
     res.json(activity);
+  });
+};
+
+//
+// POST: Save an activity
+//
+exports.all = function(req, res) {
+  Activity.find()
+          .sort('-createdAt')
+          .lean()
+          .exec(function(err, activities) {
+    res.json(activities);
   });
 };

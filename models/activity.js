@@ -6,10 +6,7 @@ var ActivitySchema = new Schema({
     task          : String // pot, seed, healthy, withered, dead
   , action        : String
   , createdAt     : { type: Date, default: Date.now }
-  , owner         : {
-     username  : String
-   , avatarUrl : String
-  }
+  , username      : String
 });
 
 module.exports = mongoose.model('Activity', ActivitySchema);

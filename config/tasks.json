@@ -2,17 +2,49 @@
   {
     "type": "dishes",
     "actions": [
-      "Collected dirty dishes",
-      "Loaded and ran dishwasher",
-      "Emptied dishwasher"
+      {
+        "action": "Collected dirty dishes"
+      },
+      {
+        "action": "Loaded and ran dishwasher"
+      },
+      {
+        "action": "Emptied dishwasher and put away dishes"
+      },
+      {
+        "action": "Washed dishes in sink"
+      }
     ]
   },
   {
     "type": "surfaces",
     "actions": [
-      "Tidied loose objects & appliances",
-      "Wiped down & sanitized surfaces",
-      "Fly patrol"
+      {
+        "action": "Tidied loose objects & appliances"
+      },
+      {
+        "action": "Wiped down & sanitized surfaces"
+      },
+      {
+        "action": "Fly patrol"
+      }  
+    ]
+  },
+  {
+    "type": "misc",
+    "actions": [
+      {
+        "action": "Emptied Trash and/or Recycling"
+      },
+      {
+        "action": "Refilled the water cooler"
+      },
+      {
+        "action": "Refilled paper towels"
+      },
+      {
+        "action": "Purged fridge of science experiments"
+      }    
     ]
   }
 ]
