@@ -62,8 +62,8 @@ function(app, Backbone) {
     activity: {}, // space for our new activity
     
     events: {
-      "click #select-task a": "selectTask",
-      "click #select-user a": "selectUser"
+      "click .select-task a": "selectTask",
+      "click .select-user a": "selectUser"
     },
     
     selectTask: function(task) {
@@ -72,7 +72,7 @@ function(app, Backbone) {
       this.activity.action = $(task.currentTarget).attr('data-action');
       
       // select the task
-      var tasks = $('#select-task a');
+      var tasks = $('.select-task a');
       for(var i = 0; i < tasks.length; i++) {
         $(tasks[i]).addClass('btn-primary').removeClass('btn-success'); // in case something was previously selected
       }
