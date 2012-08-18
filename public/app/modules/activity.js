@@ -17,9 +17,11 @@ function(app, Backbone) {
     idAttribute: "_id",
     
     defaults: {
+		  _id      : null,
 		  task     : '',
 		  action   : '',
 		  username : '',
+		  createdAt: null
 		}
 		
   });
@@ -63,7 +65,8 @@ function(app, Backbone) {
     
     events: {
       "click .select-task a": "selectTask",
-      "click .select-user a": "selectUser"
+      "click .select-user a": "selectUser",
+      "click .reset"        : "reset"
     },
     
     selectTask: function(task) {
@@ -81,7 +84,6 @@ function(app, Backbone) {
       // change the page
       $(".page-1").hide();
       $(".page-2").show();
-      console.log($("ul#pager li").slice(1));
       $("ul#pager li").first().removeClass("active");
       $("ul#pager li").slice(1).addClass("active");
     },
@@ -99,8 +101,8 @@ function(app, Backbone) {
       
       // save the Activity to the Collection
       self.activities.create(this.activity, {
-        success: function(model, resp) {
-          console.log(self.activities);
+        success: function(activity, resp) {
+          self.afterAdd(activity);
         },
         error: function() {
           new App.Views.Error();
@@ -111,6 +113,70 @@ function(app, Backbone) {
       this.activity = {};
     },
     
+    afterAdd: function(model) {
+      var self = this;
+      var tasks, task, activity, action, i, j;
+      
+      activity = model.toJSON();
+      
+      tasks = this.activities.tasks;
+      for(i = 0; i < tasks.length; i++) {
+        task = tasks[i];
+        // match up the task
+        if(task.type === activity.task) {
+          for (j = 0; j < task.actions.length; j++) {
+           action = task.actions[j];
+           
+           // match up the action
+           if (action.action === activity.action) {
+             // update the Tasks's Action's last activity
+             action.last_activity = activity;
+           }
+          }
+        }
+      }
+      this.activities.trigger('reset');
+    },
+    
+    updateSoil: function() {
+      var self, tasks, task, action, anchor, progress, percent;
+      self = this;
+      
+      var expires = 24 * 60 * 60 * 1000; // how long does it take for things to expire
+      
+      function escape(string) { 
+        return string.replace(/(\[|\]|\")/g,'\\$1');
+      }
+      
+      tasks = this.activities.tasks;
+      if (tasks) {
+        for(i = 0; i < tasks.length; i++) {
+          task = tasks[i];
+          for (j = 0; j < task.actions.length; j++) {
+            action = task.actions[j];
+            
+            if (action.last_activity === null) {
+              percent = 0;
+            }
+            else {
+              percent = 100 * (1 - (((new Date()).getTime() - (new Date(action.last_activity.createdAt)).getTime()) / expires));
+            }
+
+            anchor = $('a[data-type*="'+escape(task.type)+'"][data-action*="'+action.action +'"]')[0];
+            progress = $(anchor).siblings().find('div.progress div.bar').css('width', percent + '%');
+          }
+        }
+      }
+    },
+    
+    afterRender: function() {
+      this.updateSoil();
+    },
+    
+    reset: function() {
+      this.activities.trigger('reset'); // not sure why I can't just re-render stuff, but this works too apparently
+    },
+    
     serialize: function() {
       return { 
         tasks: this.activities.tasks || [],
@@ -119,20 +185,21 @@ function(app, Backbone) {
     },
     
     initialize: function() {
-      this.activities.on('add', this.render, this);
       this.activities.on('reset', this.render, this);
       this.users.on('reset', this.render, this);
+      
+      setInterval(this.updateSoil.bind(this), 1*60*1000);
     },
   });
   
-  Activity.Views.newSelectUserList = Backbone.View.extend({
-    template: "user/item",
-    
-    serialize: function() {
-        console.log(this.model);
-        return { model: this.model };
-    },
-  });
+  // Activity.Views.newSelectUserList = Backbone.View.extend({
+  //   template: "user/item",
+  //   
+  //   serialize: function() {
+  //       console.log(this.model);
+  //       return { model: this.model };
+  //   },
+  // });
 
   return Activity;
 

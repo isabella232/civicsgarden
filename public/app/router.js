@@ -30,6 +30,11 @@ function(app, User, Activity) {
       
       app.layout.render();
     },
+    
+    // Shortcut for building a url.
+    go: function() {
+      return this.navigate(_.toArray(arguments).join("/"), true);
+    },
 
     initialize: function() {
       app.useLayout("main");
