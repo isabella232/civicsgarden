@@ -91,6 +91,16 @@ body {
   height: 25px;
 }
 
+
+.select-user a {
+  margin-top: 15px;
+}
+
+.select-user a:nth-child(6n+1) {
+  margin-left: 0; 
+}
+
+
 ul#pager {
   margin: 0;
   padding: 0;
