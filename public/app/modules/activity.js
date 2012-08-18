@@ -188,7 +188,7 @@ function(app, Backbone) {
       this.activities.on('reset', this.render, this);
       this.users.on('reset', this.render, this);
       
-      // setInterval(this.updateSoil.bind(this), 1*60*1000);
+      setInterval($.proxy(this.updateSoil, this), 1*60*1000);
     },
   });
   
